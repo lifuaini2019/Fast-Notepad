@@ -36,6 +36,7 @@ func main() {
 	
 	http.HandleFunc("/save", saveHandler)
 	http.HandleFunc("/load", loadHandler)
+	http.HandleFunc("/ping", pingHandler) // 添加ping路由
 	http.Handle("/", http.FileServer(http.Dir("./web/")))
 
 	fmt.Println("Server started at http://localhost:1916")
@@ -69,6 +70,13 @@ func createDefaultFilesIfNotExists() {
 	} else {
 		log.Println("data.txt already exists, skipping default file creation")
 	}
+}
+
+// ping处理函数，用于检查连接状态
+func pingHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	response := map[string]string{"status": "ok", "message": "Server is running"}
+	json.NewEncoder(w).Encode(response)
 }
 
 func saveHandler(w http.ResponseWriter, r *http.Request) {
